@@ -1,0 +1,10 @@
+
+NOT WORKING
+S → aSb | bAA
+A → b{aB} | a
+B → aB | a
+
+WORKING
+E -> TE'
+E'-> +TE' |  ε 
+T -> a

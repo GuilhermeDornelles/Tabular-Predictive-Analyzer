@@ -11,6 +11,23 @@ public class Grammar {
         return this.derivations;
     }
 
+    public ArrayList<String> getAllFirst(){
+        ArrayList<String> list = new ArrayList<>();
+        for(Derivation derivation: this.derivations){
+            String first = "";
+            ArrayList<String> individualFirst = getIndividualFirst(derivation);
+            for(int i=0; i<individualFirst.size(); i++){
+                if(i+1 == individualFirst.size()){
+                    first += individualFirst.get(i);
+                } else {
+                    first += individualFirst.get(i) +", ";
+                }
+            }
+            list.add(String.format("First(%s) = %s", derivation.getLeft(), first));
+        }
+        return list;
+    }
+
     public ArrayList<String> getIndividualFirst(Derivation derivation){
         ArrayList<String> first = new ArrayList<String>();
         for(String der: derivation.getRight()){
@@ -41,8 +58,12 @@ public class Grammar {
     }
 
     public Derivation getDerivation(String left){
+        System.out.println("RECEIVED LEFT: |" + left + "|");
         for(Derivation derivation: this.derivations){
-            if(derivation.getLeft() == left){
+            System.out.println("DERIVATION LEFT: |" + derivation.getLeft() + "|");
+            // Compare if is the same String
+            if(derivation.getLeft().compareTo(left) == 0){
+                System.out.println("FOUND THE SAME LEFT!!! ");
                 return derivation;
             }
         }
@@ -54,7 +75,7 @@ public class Grammar {
         String grammar = "";
 
         for(Derivation der: this.derivations){
-            grammar += der.toString();
+            grammar += der.toString() + "\n";
         }
 
         return grammar;

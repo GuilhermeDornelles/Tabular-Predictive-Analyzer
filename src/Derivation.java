@@ -14,7 +14,7 @@ public class Derivation{
         int i=0;
         for(String index: this.right){
             if(i>0){
-                right += "|";
+                right += " | ";
             }
 
             right += index;

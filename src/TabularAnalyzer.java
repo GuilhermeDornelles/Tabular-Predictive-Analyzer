@@ -5,44 +5,59 @@ import java.util.Scanner;
 
 public class TabularAnalyzer {
     private Grammar grammar;
-    public TabularAnalyzer(Grammar grammar){
-        this.grammar = grammar;
+
+    public TabularAnalyzer(String filePath) {
+        this.grammar = buildGrammar(filePath);
+        System.out.println("PRINTING GRAMMAR");
+        System.out.println(this.grammar);
     }
 
-    public Grammar getGrammar(){
+    public String printAllFirst() {
+        String output = "";
+        for (String first : this.grammar.getAllFirst()) {
+            output += first + "\n";
+        }
+        return output;
+    }
+
+    public Grammar getGrammar() {
         return this.grammar;
     }
 
-    public String toString(){
-        return "TODO";
+    public String printGrammar() {
+        return this.grammar.toString();
     }
 
-    public static Grammar makeGrammar(String filePath) throws FileNotFoundException{
+    private static Grammar buildGrammar(String filePath) {
         File file = new File(filePath);
-        Scanner sc = new Scanner(file);
-
         ArrayList<String> lines = new ArrayList<>();
-
-        while (sc.hasNextLine()){
-            lines.add(sc.nextLine());
+        try {
+            Scanner sc = new Scanner(file);
+            while (sc.hasNextLine()) {
+                lines.add(sc.nextLine());
+            }
+            sc.close();
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        sc.close();
+
         ArrayList<Derivation> derivations = new ArrayList<>();
         String[] derivation;
-        for(String line: lines){
+        for (String line : lines) {
+            line = line.replaceAll(" ", "");
             derivation = line.split("->");
-            String[] listRight = derivation[1].split("|");
-            for(String right: listRight){
-                right = right.replaceAll(" ", "");
-                right = right.replaceAll("\n", "");
+            String[] listRight = derivation[1].split("\\|");
+            for (String right : listRight) {
+                right = right.replace(" ", "");
+                right = right.replace("\n", "");
             }
             // Converting array to Arraylist
             ArrayList<String> arrayList = new ArrayList<>();
-            for(String der: listRight){
+            for (String der : listRight) {
                 arrayList.add(der);
             }
 
-            derivations.add(new Derivation(derivation[0].replaceAll(" ", ""), arrayList));
+            derivations.add(new Derivation(derivation[0].replace(" ", ""), arrayList));
         }
 
         return new Grammar(derivations);
