@@ -29,24 +29,35 @@ public class Grammar {
     }
 
     public ArrayList<String> getIndividualFirst(Derivation derivation){
-        ArrayList<String> first = new ArrayList<String>();
-        for(String der: derivation.getRight()){
-            String first_char = Character.toString(der.charAt(0));
-            
-            if(first_char != "ε"){
+        ArrayList<String> listOfFirsts = new ArrayList<String>();
+        for(String possibilityOfDerivation: derivation.getRight()){
+            String first_char = returnFirstChar(possibilityOfDerivation);
+            if(Utils.isCharValid(first_char)) {
                 if(Utils.isTerminal(first_char)){
-                    first.add(first_char);
+                        listOfFirsts.add(first_char);
                 } else {
-                    if(Character.toString(der.charAt(1)) == "'"){
-                        first_char = String.format("%s -> %s", Character.toString(der.charAt(0)), Character.toString(der.charAt(1)));
-                    }
-                    
-                    first.add(getIndividualFirst(getDerivation(first_char)).get(0));
-                    
+                    Derivation fullDerivation = getDerivation(first_char);
+                    ArrayList<String> individualFirst = getIndividualFirst(fullDerivation);
+                    listOfFirsts.addAll(individualFirst);
                 }
             }
         }
-        return first;
+        return listOfFirsts;
+    }
+
+    private String returnFirstChar(String possibilityOfDerivation){
+        if(possibilityOfDerivation.length() == 0) return "";
+        String firstChar = Character.toString(possibilityOfDerivation.charAt(0));
+        // logic to concatenate in firstChar all ' in case we have A', A'', A''', etc
+        if(possibilityOfDerivation.length() >= 1){
+            for (int i = 1; i < possibilityOfDerivation.length(); i++) {
+                if(Character.toString(possibilityOfDerivation.charAt(i)).compareTo("'") == 0){
+                    firstChar += possibilityOfDerivation.charAt(i);
+                }
+                else break;
+            }
+        }
+        return firstChar;
     }
 
     public ArrayList<ArrayList<String>> first(){
@@ -60,14 +71,12 @@ public class Grammar {
     public Derivation getDerivation(String left){
         System.out.println("RECEIVED LEFT: |" + left + "|");
         for(Derivation derivation: this.derivations){
-            System.out.println("DERIVATION LEFT: |" + derivation.getLeft() + "|");
-            // Compare if is the same String
+            // System.out.println("DERIVATION LEFT: |" + derivation.getLeft() + "|");
             if(derivation.getLeft().compareTo(left) == 0){
-                System.out.println("FOUND THE SAME LEFT!!! ");
+                System.out.println("FOUND DERIVATION FOR LEFT " + left + " = " + derivation);
                 return derivation;
             }
         }
-
         return null;
     }
 

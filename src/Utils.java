@@ -5,4 +5,7 @@ public class Utils {
         }
         return false;
     }
+    public static boolean isCharValid(String strChar){
+        return strChar.compareTo("E") != 0;
+    }
 }

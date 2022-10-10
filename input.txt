@@ -1,3 +1,4 @@
-E -> TE'
-E'-> +TE' |  ε 
+A -> A'T
+A' -> +TA' | E | Ba
 T -> a
+B -> b
