@@ -1,0 +1,16 @@
+
+NOT WORKING
+S → aSb | bAA
+A → b{aB} | a
+B → aB | a
+
+WORKING
+E -> TE'
+E'-> +TE' |  ε 
+T -> a
+
+Usando vazio como 'E' e com mais de um first por Derivacao
+A -> TA'
+A' -> +TA' | E | Ba
+T -> a
+B -> b
