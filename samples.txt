@@ -1,13 +1,13 @@
+Inputs samples: 
 
-NOT WORKING
-S → aSb | bAA
-A → b{aB} | a
-B → aB | a
+S -> aSb | bAA
+A -> b{aB} | a
+B -> aB | a
 
-WORKING
 E -> TE'
-E'-> +TE' |  ε 
+E'-> +TE' |  E 
 T -> a
+
 
 Usando vazio como 'E' e com mais de um first por Derivacao
 A -> TA'
