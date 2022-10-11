@@ -4,8 +4,8 @@ S -> aSb | bAA
 A -> b{aB} | a
 B -> aB | a
 
-E -> TE'
-E'-> +TE' |  E 
+G -> TG'
+G'-> +TG' |  G 
 T -> a
 
 
