@@ -20,6 +20,14 @@ public class TabularAnalyzer {
         return output;
     }
 
+    public String printAllFollow() {
+        String output = "";
+        for (String follow : this.grammar.getAllFollow()) {
+            output += follow + "\n";
+        }
+        return output;
+    }
+
     public Grammar getGrammar() {
         return this.grammar;
     }
