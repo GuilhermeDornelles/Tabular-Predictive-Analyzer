@@ -14,3 +14,9 @@ A -> TA'
 A' -> +TA' | E | Ba
 T -> a
 B -> b
+
+A -> TA'
+A' -> +TA' | E
+T -> FT'
+T' -> *FT' | E
+F -> ( A ) | id

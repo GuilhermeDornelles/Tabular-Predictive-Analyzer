@@ -10,5 +10,6 @@ public class Main {
         }
         TabularAnalyzer analyzer = new TabularAnalyzer(caminhoArquivo);
         System.out.println(analyzer.printAllFirst());
+        System.out.println(analyzer.printAllFollow());
     }
 }

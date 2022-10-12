@@ -21,7 +21,7 @@ public class Grammar {
 
     public void buildFirst() {
         for (Derivation derivation : this.derivations) {
-            ArrayList<String> individualFirst = getIndividualFirst(derivation);
+            ArrayList<String> individualFirst = this.getIndividualFirst(derivation);
             for (String first : individualFirst) {
                 derivation.addFirst(first);
             }
@@ -30,7 +30,7 @@ public class Grammar {
 
     public void buildFollow() {
         for (Derivation derivation : this.derivations) {
-            ArrayList<String> individualFollow = getIndividualFollow(derivation);
+            ArrayList<String> individualFollow = this.getIndividualFollow(derivation);
             for (String follow : individualFollow) {
                 derivation.addFollow(follow);
             }
@@ -98,74 +98,40 @@ public class Grammar {
             followList.add("$");
         }
         String derivationLeft = derivation.getLeft();
-        ArrayList<Derivation> derivationListToVerify = new ArrayList<>();
-
+        ArrayList<String> derivationListToVerify = new ArrayList<>();
+        // ArrayList<Derivation> derivationListToVerify = 
         for (Derivation der : this.derivations) {
-            if (der.containInRight(derivationLeft)) {
-                derivationListToVerify.add(derivation);
-            }
+            derivationListToVerify.addAll(der.getAllDerivationPossibilitiesThatContain(derivationLeft)); 
         }
+        // System.out.println("Derivation Left: "+ derivationLeft + " | Derivation list to verify: " + derivationListToVerify);
 
-        for (Derivation index : derivationListToVerify) {
-            for (String right : index.getRight()) {
-                if (right.contains(derivationLeft)) {
-                    for (int i = 0; i < right.length(); i++) {
-                        String letter = Character.toString(right.charAt(i));
-                        String next = "";
-                        if (letter.compareTo(derivationLeft) == 0) {
-                            // verify if it's not in the last position
-                            if ((i + 1) >= right.length()) {
-                                next = "NOTHING";
-                            } else if (Character.toString(right.charAt(i + 1)).compareTo("'") == 0) {
-                                if ((i + 2) >= right.length()) {
-                                    next = "NOTHING";
-                                } else {
-                                    next = Character.toString(right.charAt(i + 2));
-                                }
-                            } else {
-                                next = Character.toString(right.charAt(i + 1));
-                            }
-                            // MOST IMPORTANT
-                            if (Utils.isTerminal(next)) {
-                                followList.add(next);
-                            } else {
-                                // Means that next is not terminal
-                                if (next.compareTo("NOTHING") != 0) {
-                                    Derivation derivationAux = getDerivation(next);
-                                    ArrayList<String> listAux = derivationAux.getAllFirst();
-                                    for (String f : listAux) {
-                                        followList.add(f);
-                                    }
-                                    listAux.clear();
-                                    if (derivationAux.containsEmptyInFirst()) {
-                                        listAux = getIndividualFollow(index);
-                                    }
-                                    for (String f : listAux) {
-                                        followList.add(f);
-                                    }
-                                }
-                                // Means that next is nothing and will receive the follow from the left
-                                else {
-                                    // It will prevent that a derivation received itself many times
-                                    if (index.getLeft().compareTo(letter) != 0) {
-                                        ArrayList<String> listAux = index.getAllFollow();
-                                        if (listAux == null) {
-                                            listAux = getIndividualFollow(index);
-                                        }
-
-                                        for (String f : listAux) {
-                                            followList.add(f);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        for (String stringToAnalise : derivationListToVerify) {
+            Derivation nonTerminalFather = this.getLeftFromString(stringToAnalise);
+            int foundAtIndex = stringToAnalise.indexOf(derivationLeft);
+            System.out.println("Nao terminal achado: " + nonTerminalFather + " da derivacao " + stringToAnalise);
+            if(stringToAnalise.length() <= foundAtIndex + derivationLeft.length()){
+                // é o ultimo da string, aplica regra 3
+                ArrayList<String> followsToAdd = nonTerminalFather.getAllFollow();
+                if(followsToAdd == null)
+                    this.getIndividualFollow(nonTerminalFather);
+                followList.addAll(followsToAdd);
             }
+            // System.out.println("Follow agora: " + followList);
+            // String nextCharOfDerivationLeft = Character.toString(stringToAnalise.charAt(foundAtIndex + (derivationLeft.length())));            
         }
         cleanRepeatedAndEmpty(followList);
         return followList;
+    }
+
+    private Derivation getLeftFromString(String derivated){
+        for(Derivation der : this.derivations){
+            ArrayList<String> derRights = der.getRight();
+            for (String possibility : derRights){
+                if(possibility.compareTo(derivated) == 0)
+                    return der;
+            }
+        }
+        return null;
     }
 
     private void cleanRepeatedAndEmpty(ArrayList<String> list) {
@@ -227,3 +193,57 @@ public class Grammar {
         return grammar;
     }
 }
+
+
+// for (String right : index.getRight()) {
+            //     for (int i = 0; i < right.length(); i++) {
+            //         String letter = Character.toString(right.charAt(i));
+            //         String next = "";
+            //         if (letter.compareTo(derivationLeft) == 0) {
+            //             // verify if it's not in the last position
+            //             if ((i + 1) >= right.length()) {
+            //                 next = "NOTHING";
+            //             } else if (Character.toString(right.charAt(i + 1)).compareTo("'") == 0) {
+            //                 if ((i + 2) >= right.length()) {
+            //                     next = "NOTHING";
+            //                 } else {
+            //                     next = Character.toString(right.charAt(i + 2));
+            //                 }
+            //             } else {
+            //                 next = Character.toString(right.charAt(i + 1));
+            //             }
+            //             // MOST IMPORTANT
+            //             if (Utils.isTerminal(next)) {
+            //                 followList.add(next);
+            //             } else {
+            //                 if (next.compareTo("NOTHING") != 0) {
+            //                     Derivation derivationAux = this.getDerivation(next);
+            //                     ArrayList<String> listAux = derivationAux.getAllFirst();
+            //                     for (String f : listAux) {
+            //                         followList.add(f);
+            //                     }
+            //                     listAux.clear();
+            //                     if (derivationAux.containsEmptyInFirst()) {
+            //                         listAux = getIndividualFollow(index);
+            //                     }
+            //                     for (String f : listAux) {
+            //                         followList.add(f);
+            //                     }
+            //                 }
+            //                 // Means that next is nothing and will receive the follow from the left
+            //                 else {
+            //                     // It will prevent that a derivation received itself many times
+            //                     if (index.getLeft().compareTo(letter) != 0) {
+            //                         ArrayList<String> listAux = index.getAllFollow();
+            //                         if (listAux == null) {
+            //                             listAux = getIndividualFollow(index);
+            //                         }
+
+            //                         for (String f : listAux) {
+            //                             followList.add(f);
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }

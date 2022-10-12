@@ -31,9 +31,9 @@ public class Derivation {
         return false;
     }
 
-    public boolean containInRight(String letter){
+    public boolean containsInRight(String letter){
         for(String option: this.right){
-            if(option.compareTo(letter) == 0){
+            if(option.contains(letter)){
                 return true;
             }
         }
@@ -109,5 +109,23 @@ public class Derivation {
 
     public ArrayList<String> getRight() {
         return this.right;
+    }
+
+    public ArrayList<String> getAllDerivationPossibilitiesThatContain(String derivationLeft) {
+        ArrayList<String> listPossibilitiesString = new ArrayList<>();
+        for (String possibility : this.getRight()) {
+            if(possibility.contains(derivationLeft)){
+                int foundAtIndex = possibility.indexOf(derivationLeft);
+                if(possibility.length() <= foundAtIndex + derivationLeft.length()){
+                    listPossibilitiesString.add(possibility);
+                    continue;
+                }
+                String nextCharOfDerivationLeft = Character.toString(possibility.charAt(foundAtIndex + (derivationLeft.length())));
+                if(nextCharOfDerivationLeft.compareTo("'") != 0){
+                    listPossibilitiesString.add(possibility);
+                }
+            }
+        }
+        return listPossibilitiesString;
     }
 }
