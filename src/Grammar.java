@@ -4,11 +4,17 @@ import java.util.Set;
 
 public class Grammar {
     private ArrayList<Derivation> derivations;
+    private ArrayList<M> analysisTable;
+
+    public ArrayList<M> getAnalysisTable() {
+        return analysisTable;
+    }
 
     public Grammar(ArrayList<Derivation> derivations) {
         this.derivations = derivations;
         buildFirst();
         buildFollow();
+        buildAnalysisTable();
     }
 
     public Derivation getFirstDerivation() {
@@ -35,6 +41,48 @@ public class Grammar {
                 derivation.addFollow(follow);
             }
         }
+    }
+
+    private ArrayList<Derivation> returnAllPossibleDerivations(){
+        ArrayList<Derivation> allDerivations = new ArrayList<>();
+        for (Derivation derivation : this.derivations) {
+            for (String right : derivation.getRight()){
+                Derivation newDer = new Derivation(derivation.getLeft(), right);
+                allDerivations.add(newDer);
+            }
+        }
+        return allDerivations;
+    }
+
+    public ArrayList<M> buildAnalysisTable() {
+        analysisTable = new ArrayList<>();
+        ArrayList<Derivation> allPossibleDerivations = returnAllPossibleDerivations();
+        for (Derivation der : allPossibleDerivations) {
+            String firstChar = returnFirstChar(der.getRight().get(0));
+
+            if(Utils.isTerminal(firstChar)){
+                M newM = new M(der.getLeft(), firstChar, der);
+                analysisTable.add(newM);
+                continue;
+            }
+            else if (!Utils.isCharValid(firstChar)){
+                Derivation derLeft = this.getDerivation(der.getLeft());
+                ArrayList<String> followDaEsquerda = derLeft.getAllFollow();
+                for (String terminal : followDaEsquerda) {
+                    M newM = new M(der.getLeft(), terminal, der);
+                    analysisTable.add(newM);
+                }
+            }
+            else{
+                Derivation derFirstChar = this.getDerivation(firstChar);
+                ArrayList<String> firstDoFirst = derFirstChar.getAllFirst();
+                for (String terminal : firstDoFirst) {
+                    M newM = new M(der.getLeft(), terminal, der);
+                    analysisTable.add(newM);
+                }
+            }
+        }
+        return analysisTable;
     }
 
     public ArrayList<String> getAllFirst() {
@@ -99,27 +147,19 @@ public class Grammar {
         }
         String derivationLeft = derivation.getLeft();
         ArrayList<String> derivationListToVerify = new ArrayList<>();
-        // ArrayList<Derivation> derivationListToVerify = 
         for (Derivation der : this.derivations) {
             derivationListToVerify.addAll(der.getAllDerivationPossibilitiesThatContain(derivationLeft)); 
         }
-        // System.out.println("Derivation Left: "+ derivationLeft + " | Derivation list to verify: " + derivationListToVerify);
-
         for (String stringToAnalise : derivationListToVerify) {
             Derivation nonTerminalFather = this.getLeftFromString(stringToAnalise);
             int foundAtIndex = stringToAnalise.indexOf(derivationLeft);
-            // System.out.println("Nao terminal achado: " + nonTerminalFather + " da derivacao " + stringToAnalise);
             if(stringToAnalise.length() <= foundAtIndex + derivationLeft.length()){
 
                 ArrayList<String> followsToAdd = nonTerminalFather.getAllFollow();
-                // System.out.println("follows to add " + followsToAdd); 
-
                 if(followsToAdd != null && !followsToAdd.isEmpty()){
                     followList.addAll(followsToAdd);
                 }
-
             } else {
-
                 String next = Character.toString(stringToAnalise.charAt(foundAtIndex + (derivationLeft.length())));
 
                 int i = 1;
@@ -134,20 +174,17 @@ public class Grammar {
                 } else {
                     Derivation nextDerivation = getDerivation(next);
                 
-                    // adiciona todos os firsts do next (menos E)
+                    // adiciona todos os firsts do next
                     followList.addAll(nextDerivation.getAllFirst());
 
-                    // lança o q falta da regra 3
+                    // se existe E nos firsts, pega o Follow
                     if(nextDerivation.containsEmptyInFirst()){
                         followList.addAll(nextDerivation.getAllFollow());
                     }
-                    
                 }
             }
-            // System.out.println("Follow agora: " + followList);
         }
-        ArrayList<String> followListCleaned = cleanRepeatedAndEmpty(followList);
-        return followListCleaned;
+        return cleanRepeatedAndEmpty(followList);
     }
 
     private Derivation getLeftFromString(String derivated){
@@ -191,20 +228,17 @@ public class Grammar {
         return firstChar;
     }
 
-    public ArrayList<ArrayList<String>> first() {
-        ArrayList<ArrayList<String>> list = new ArrayList<>();
-        for (Derivation derivation : this.derivations) {
-            list.add(getIndividualFirst(derivation));
-        }
-        return list;
-    }
+    // public ArrayList<ArrayList<String>> first() {
+    //     ArrayList<ArrayList<String>> list = new ArrayList<>();
+    //     for (Derivation derivation : this.derivations) {
+    //         list.add(getIndividualFirst(derivation));
+    //     }
+    //     return list;
+    // }
 
     public Derivation getDerivation(String left) {
-        // System.out.println("RECEIVED LEFT: |" + left + "|");
         for (Derivation derivation : this.derivations) {
-            // System.out.println("DERIVATION LEFT: |" + derivation.getLeft() + "|");
             if (derivation.getLeft().compareTo(left) == 0) {
-                // System.out.println("FOUND DERIVATION FOR LEFT " + left + " = " + derivation);
                 return derivation;
             }
         }

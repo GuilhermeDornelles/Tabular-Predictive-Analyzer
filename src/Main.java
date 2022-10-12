@@ -9,7 +9,12 @@ public class Main {
             caminhoArquivo = args[0];
         }
         TabularAnalyzer analyzer = new TabularAnalyzer(caminhoArquivo);
+        System.out.println("Conjunto FIRST:");
         System.out.println(analyzer.printAllFirst());
+        System.out.println("Conjunto FOLLOW:");
         System.out.println(analyzer.printAllFollow());
+        System.out.println("Definicao da Tabela de Análise Preditiva:");
+        System.out.println(analyzer.printTabularAnalyzer());
+
     }
 }
