@@ -25,6 +25,14 @@ public class TabularAnalyzer {
         return output;
     }
 
+    public String printTabularAnalyzer(){
+        String output = "";
+        for (M m : this.grammar.getAnalysisTable()) {
+            output += m + "\n";
+        }
+        return output;
+    }
+
     public Grammar getGrammar() {
         return this.grammar;
     }

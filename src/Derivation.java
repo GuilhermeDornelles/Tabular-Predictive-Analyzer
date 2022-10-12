@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Derivation {
     private String left;
@@ -9,6 +10,12 @@ public class Derivation {
     public Derivation(String left, ArrayList<String> right) {
         this.left = left;
         this.right = right;
+        this.first = new ArrayList<>();
+        this.follow = new ArrayList<>();
+    }
+    public Derivation(String left, String right) {
+        this.left = left;
+        this.right = new ArrayList<String>(Collections. singletonList(right));
         this.first = new ArrayList<>();
         this.follow = new ArrayList<>();
     }

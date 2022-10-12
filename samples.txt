@@ -1,6 +1,6 @@
 Inputs samples: 
 
-S -> aSb | bAA
+S -> aSb | bAB
 A -> b{aB} | a
 B -> aB | a
 
