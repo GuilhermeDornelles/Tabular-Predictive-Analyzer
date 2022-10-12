@@ -146,8 +146,8 @@ public class Grammar {
             }
             // System.out.println("Follow agora: " + followList);
         }
-        cleanRepeatedAndEmpty(followList);
-        return followList;
+        ArrayList<String> followListCleaned = cleanRepeatedAndEmpty(followList);
+        return followListCleaned;
     }
 
     private Derivation getLeftFromString(String derivated){
@@ -161,17 +161,18 @@ public class Grammar {
         return null;
     }
 
-    private void cleanRepeatedAndEmpty(ArrayList<String> list) {
+    private ArrayList<String> cleanRepeatedAndEmpty(ArrayList<String> list) {
         // Removing repeated
         Set<String> setAux = new LinkedHashSet<>(list);
         ArrayList<String> newList = new ArrayList<>(setAux);
 
-        // Cleaning Empty
-        for (String s : newList) {
-            if (s.compareTo(Utils.EMPTY_SYMBOL) == 0) {
-                newList.remove(s);
+        // Cleaning Empty Symbol "E"
+        for (int i = 0; i < newList.size(); i++) {
+            if (newList.get(i).compareTo(Utils.EMPTY_SYMBOL) == 0) {
+                newList.remove(newList.get(i));
             }
         }
+        return newList;
     }
 
     private String returnFirstChar(String possibilityOfDerivation) {
