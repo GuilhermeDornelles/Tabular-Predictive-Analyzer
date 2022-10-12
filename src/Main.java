@@ -1,7 +1,15 @@
 public class Main {
     public static void main(String[] args) {
-        TabularAnalyzer analyzer = new TabularAnalyzer(args[0]);
-        // TabularAnalyzer analyzer = new TabularAnalyzer("../input.txt");
+        String caminhoArquivo = "";
+        if(args.length < 1) {
+            System.out.println("Nenhum arquivo foi passado como argumento, utilizando input.txt...\n");
+            caminhoArquivo = "./input.txt";
+        }
+        else {
+            caminhoArquivo = args[0];
+        }
+        TabularAnalyzer analyzer = new TabularAnalyzer(caminhoArquivo);
         System.out.println(analyzer.printAllFirst());
+        System.out.println(analyzer.printAllFollow());
     }
 }

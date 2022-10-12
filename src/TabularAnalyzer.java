@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class TabularAnalyzer {
     private Grammar grammar;
@@ -20,6 +17,14 @@ public class TabularAnalyzer {
         return output;
     }
 
+    public String printAllFollow() {
+        String output = "";
+        for (String follow : this.grammar.getAllFollow()) {
+            output += follow + "\n";
+        }
+        return output;
+    }
+
     public Grammar getGrammar() {
         return this.grammar;
     }
@@ -29,17 +34,7 @@ public class TabularAnalyzer {
     }
 
     private static Grammar buildGrammar(String filePath) {
-        File file = new File(filePath);
-        ArrayList<String> lines = new ArrayList<>();
-        try {
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                lines.add(sc.nextLine());
-            }
-            sc.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        ArrayList<String> lines = Utils.returnLinesFromFile(filePath);
 
         ArrayList<Derivation> derivations = new ArrayList<>();
         String[] derivation;
@@ -51,15 +46,10 @@ public class TabularAnalyzer {
                 right = right.replace(" ", "");
                 right = right.replace("\n", "");
             }
-            // Converting array to Arraylist
-            ArrayList<String> arrayList = new ArrayList<>();
-            for (String der : listRight) {
-                arrayList.add(der);
-            }
+            ArrayList<String> arrayList = Utils.transformArrayToArrayList(listRight);
 
             derivations.add(new Derivation(derivation[0].replace(" ", ""), arrayList));
         }
-
         return new Grammar(derivations);
     }
 }
