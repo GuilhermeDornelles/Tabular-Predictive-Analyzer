@@ -15,7 +15,7 @@ public class Derivation {
 
     public boolean derivatesEmpty(){
         for(String option: this.right){
-            if(option.contains("E")){
+            if(option.contains(Utils.EMPTY_SYMBOL)){
                 return true;
             }
         }
@@ -24,7 +24,7 @@ public class Derivation {
 
     public boolean containsEmptyInFirst(){
         for(String option: this.first){
-            if(option.compareTo("E") == 0){
+            if(option.compareTo(Utils.EMPTY_SYMBOL) == 0){
                 return true;
             }
         }

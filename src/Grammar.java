@@ -41,7 +41,6 @@ public class Grammar {
         ArrayList<String> list = new ArrayList<>();
         for (Derivation derivation : this.derivations) {
             String first = "";
-            // ArrayList<String> individualFirst = getIndividualFirst(derivation);
             ArrayList<String> individualFirst = derivation.getAllFirst();
             for (int i = 0; i < individualFirst.size(); i++) {
                 if (i + 1 == individualFirst.size()) {
@@ -95,19 +94,19 @@ public class Grammar {
 
     public ArrayList<String> getIndividualFollow(Derivation derivation) {
         ArrayList<String> followList = new ArrayList<>();
-        if (derivation == getFirstDerivation()) {
+        if (derivation == this.getFirstDerivation()) {
             followList.add("$");
         }
         String derivationLeft = derivation.getLeft();
-        ArrayList<Derivation> DerivationListToVerify = new ArrayList<>();
+        ArrayList<Derivation> derivationListToVerify = new ArrayList<>();
 
         for (Derivation der : this.derivations) {
             if (der.containInRight(derivationLeft)) {
-                DerivationListToVerify.add(derivation);
+                derivationListToVerify.add(derivation);
             }
         }
 
-        for (Derivation index : DerivationListToVerify) {
+        for (Derivation index : derivationListToVerify) {
             for (String right : index.getRight()) {
                 if (right.contains(derivationLeft)) {
                     for (int i = 0; i < right.length(); i++) {
@@ -176,7 +175,7 @@ public class Grammar {
 
         // Cleaning Empty
         for (String s : newList) {
-            if (s.compareTo("E") == 0) {
+            if (s.compareTo(Utils.EMPTY_SYMBOL) == 0) {
                 newList.remove(s);
             }
         }
@@ -207,11 +206,11 @@ public class Grammar {
     }
 
     public Derivation getDerivation(String left) {
-        System.out.println("RECEIVED LEFT: |" + left + "|");
+        // System.out.println("RECEIVED LEFT: |" + left + "|");
         for (Derivation derivation : this.derivations) {
             // System.out.println("DERIVATION LEFT: |" + derivation.getLeft() + "|");
             if (derivation.getLeft().compareTo(left) == 0) {
-                System.out.println("FOUND DERIVATION FOR LEFT " + left + " = " + derivation);
+                // System.out.println("FOUND DERIVATION FOR LEFT " + left + " = " + derivation);
                 return derivation;
             }
         }
