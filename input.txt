@@ -2,4 +2,4 @@ A -> TA'
 A' -> +TA' | E
 T -> FT'
 T' -> *FT' | E
-F -> (A | id
+F -> (A) | id

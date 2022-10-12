@@ -108,16 +108,43 @@ public class Grammar {
         for (String stringToAnalise : derivationListToVerify) {
             Derivation nonTerminalFather = this.getLeftFromString(stringToAnalise);
             int foundAtIndex = stringToAnalise.indexOf(derivationLeft);
-            System.out.println("Nao terminal achado: " + nonTerminalFather + " da derivacao " + stringToAnalise);
+            // System.out.println("Nao terminal achado: " + nonTerminalFather + " da derivacao " + stringToAnalise);
             if(stringToAnalise.length() <= foundAtIndex + derivationLeft.length()){
-                // é o ultimo da string, aplica regra 3
+
                 ArrayList<String> followsToAdd = nonTerminalFather.getAllFollow();
-                if(followsToAdd == null)
-                    this.getIndividualFollow(nonTerminalFather);
-                followList.addAll(followsToAdd);
+                // System.out.println("follows to add " + followsToAdd); 
+
+                if(followsToAdd != null && !followsToAdd.isEmpty()){
+                    followList.addAll(followsToAdd);
+                }
+
+            } else {
+
+                String next = Character.toString(stringToAnalise.charAt(foundAtIndex + (derivationLeft.length())));
+
+                int i = 1;
+                while (stringToAnalise.length() > foundAtIndex + (derivationLeft.length()) + i &&
+                       Character.toString(stringToAnalise.charAt(foundAtIndex + (derivationLeft.length()) + i)).compareTo("'") == 0){
+                    i++;
+                    next += "'";
+                };
+                
+                if(Utils.isTerminal(next)){
+                    followList.add(next);
+                } else {
+                    Derivation nextDerivation = getDerivation(next);
+                
+                    // adiciona todos os firsts do next (menos E)
+                    followList.addAll(nextDerivation.getAllFirst());
+
+                    // lança o q falta da regra 3
+                    if(nextDerivation.containsEmptyInFirst()){
+                        followList.addAll(nextDerivation.getAllFollow());
+                    }
+                    
+                }
             }
             // System.out.println("Follow agora: " + followList);
-            // String nextCharOfDerivationLeft = Character.toString(stringToAnalise.charAt(foundAtIndex + (derivationLeft.length())));            
         }
         cleanRepeatedAndEmpty(followList);
         return followList;
