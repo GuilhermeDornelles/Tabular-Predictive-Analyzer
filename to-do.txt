@@ -1,8 +1,0 @@
-TO DO
-- Write a document explaining how must be the input.txt
-- Add the first and follow attributes for each Derivation object after Grammae building
-
-DOING
-- 
-
-DONE

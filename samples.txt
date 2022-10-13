@@ -8,8 +8,6 @@ G -> TG'
 G'-> +TG' |  G 
 T -> a
 
-
-Usando vazio como 'E' e com mais de um first por Derivacao
 A -> TA'
 A' -> +TA' | E | Ba
 T -> a
