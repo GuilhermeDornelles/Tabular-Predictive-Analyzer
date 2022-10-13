@@ -5,7 +5,7 @@ public class TabularAnalyzer {
 
     public TabularAnalyzer(String filePath) {
         this.grammar = buildGrammar(filePath);
-        System.out.println("PRINTING GRAMMAR");
+        System.out.println("Gramática Criada:");
         System.out.println(this.grammar);
     }
 
@@ -61,3 +61,4 @@ public class TabularAnalyzer {
         return new Grammar(derivations);
     }
 }
+    

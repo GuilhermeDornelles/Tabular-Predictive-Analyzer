@@ -3,7 +3,7 @@ public class Main {
         String caminhoArquivo = "";
         if(args.length < 1) {
             System.out.println("Nenhum arquivo foi passado como argumento, utilizando input.txt...\n");
-            caminhoArquivo = "./input.txt";
+            caminhoArquivo = "../input.txt";
         }
         else {
             caminhoArquivo = args[0];
@@ -13,7 +13,7 @@ public class Main {
         System.out.println(analyzer.printAllFirst());
         System.out.println("Conjunto FOLLOW:");
         System.out.println(analyzer.printAllFollow());
-        System.out.println("Definicao da Tabela de Análise Preditiva:");
+        System.out.println("Definição da Tabela de Análise Preditiva:");
         System.out.println(analyzer.printTabularAnalyzer());
 
     }
