@@ -58,7 +58,7 @@ public class Grammar {
         analysisTable = new ArrayList<>();
         ArrayList<Derivation> allPossibleDerivations = returnAllPossibleDerivations();
         for (Derivation der : allPossibleDerivations) {
-            String firstChar = returnFirstChar(der.getRight().get(0));
+            String firstChar = Utils.returnFirstChar(der.getRight().get(0));
 
             if(Utils.isTerminal(firstChar)){
                 M newM = new M(der.getLeft(), firstChar, der);
@@ -124,7 +124,7 @@ public class Grammar {
     public ArrayList<String> getIndividualFirst(Derivation derivation) {
         ArrayList<String> listOfFirsts = new ArrayList<String>();
         for (String possibilityOfDerivation : derivation.getRight()) {
-            String first_char = returnFirstChar(possibilityOfDerivation);
+            String first_char = Utils.returnFirstChar(possibilityOfDerivation);
             if (Utils.isCharValid(first_char)) {
                 if (Utils.isTerminal(first_char)) {
                     listOfFirsts.add(first_char);
@@ -210,22 +210,6 @@ public class Grammar {
             }
         }
         return newList;
-    }
-
-    private String returnFirstChar(String possibilityOfDerivation) {
-        if (possibilityOfDerivation.length() == 0)
-            return "";
-        String firstChar = Character.toString(possibilityOfDerivation.charAt(0));
-        // logic to concatenate in firstChar all ' in case we have A', A'', A''', etc
-        if (possibilityOfDerivation.length() >= 1) {
-            for (int i = 1; i < possibilityOfDerivation.length(); i++) {
-                if (Character.toString(possibilityOfDerivation.charAt(i)).compareTo("'") == 0) {
-                    firstChar += possibilityOfDerivation.charAt(i);
-                } else
-                    break;
-            }
-        }
-        return firstChar;
     }
 
     public Derivation getDerivation(String left) {

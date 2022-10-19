@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class TabularAnalyzer {
     private Grammar grammar;
@@ -39,6 +40,46 @@ public class TabularAnalyzer {
 
     public String printGrammar() {
         return this.grammar.toString();
+    }
+
+    public boolean readSentence(String sentence){
+        ArrayList<M> table = this.grammar.getAnalysisTable();
+        sentence = sentence.replace(" ", "") + "$";
+        Stack<String> stack = new Stack<>();
+        stack.push("$");
+        String init = this.grammar.getFirstDerivation().getLeft();
+        stack.push(init);
+        
+        while (!stack.empty()) {
+            String topOfStack = stack.pop();
+            String topOfSentence = Character.toString(sentence.charAt(0));
+            if(Utils.isTerminal(topOfStack)){
+                if (topOfStack.equals(topOfSentence)){
+                    sentence = sentence.substring(1);
+                }
+                return false;
+            }
+            else{
+                Derivation currDer = null;
+                for (M m : table) {
+                    if(m.getNonTerminal().equals(topOfStack) && m.getTerminal().equals(topOfSentence)){
+                        currDer = m.getDerivation();
+                    }
+                }
+                if(currDer == null) return false;
+
+                String right = currDer.getRight().get(0);
+                int rightLength = right.length();
+                while (rightLength > 0){
+                    // char lastCharacter = right.charAt(rightLength-1);
+                    String lastCharacter = Utils.returnLastChar(right);
+                    stack.push(lastCharacter);
+                    rightLength -= 1;
+                }
+            }
+        }
+
+        return true;
     }
 
     private static Grammar buildGrammar(String filePath) {
