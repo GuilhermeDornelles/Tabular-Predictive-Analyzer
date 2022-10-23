@@ -26,7 +26,12 @@ public class Main {
             if (stop == 0) break;
             System.out.print("Insira uma sentença para ser reconhecida pelo Analisador: ");
             String sentence = in.nextLine().strip();
-            System.out.println(analyzer.readSentence(sentence));
+            boolean isValid = analyzer.readSentence(sentence);
+            if(isValid){
+                System.out.println("A sentença foi reconhecida com sucesso!");
+            } else {
+                System.out.println("Sentença inválida. Não foi reconhecida");
+            }
         } while (stop == 0);
     }
 }

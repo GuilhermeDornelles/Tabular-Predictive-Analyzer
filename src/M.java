@@ -3,7 +3,7 @@ public class M {
     private String terminal;
     private Derivation derivation;
 
-    public M(String nonTerminal, String terminal, Derivation derivation){
+    public M(String terminal, String nonTerminal, Derivation derivation){
         this.nonTerminal = nonTerminal;
         this.terminal = terminal;
         this.derivation = derivation;
@@ -22,6 +22,6 @@ public class M {
     }
 
     public String toString(){
-        return String.format("M[%s,%s] = %s",this.nonTerminal, this.terminal, this.derivation);
+        return String.format("M[%s,%s] = %s", this.terminal, this.nonTerminal, this.derivation);
     }
 }

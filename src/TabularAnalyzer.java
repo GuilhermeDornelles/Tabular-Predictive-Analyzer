@@ -43,42 +43,72 @@ public class TabularAnalyzer {
     }
 
     public boolean readSentence(String sentence){
+        System.out.println("Reconhendo sentença");
         ArrayList<M> table = this.grammar.getAnalysisTable();
         sentence = sentence.replace(" ", "") + "$";
         Stack<String> stack = new Stack<>();
+        // Adiciona $ ao início da pilha
         stack.push("$");
+        // Começa pela primeira derivação da gramática
         String init = this.grammar.getFirstDerivation().getLeft();
         stack.push(init);
         
+        // Enquando a pilha não estiver vazia
         while (!stack.empty()) {
+            System.out.println(String.format("%s    |    %s", stack, sentence));
+            // Retira o topo da pilha
             String topOfStack = stack.pop();
+            // Pega o atual primeiro caractere da sentença
             String topOfSentence = Character.toString(sentence.charAt(0));
-            if(Utils.isTerminal(topOfStack)){
-                if (topOfStack.equals(topOfSentence)){
-                    sentence = sentence.substring(1);
-                }
-                return false;
+                
+            if(topOfSentence.equals("$") && topOfStack.equals("$")){
+                return true;
             }
+            // Se o topo da pilha for terminal
+            if(Utils.isTerminal(topOfStack)){
+                // Se os dois topos forem iguais
+                if (topOfStack.equals(topOfSentence)){
+                    // Remove o primeiro caractere da sentença
+                    sentence = sentence.substring(1);
+                } 
+                // Significa que a frase não é reconhecida
+                else {
+                    System.out.println("Terminais da pilha e fila não coincidem");
+                    return false;
+                }
+            }
+            // Se não for terminal
             else{
                 Derivation currDer = null;
+                // Para cada elemento da tabela
                 for (M m : table) {
-                    if(m.getNonTerminal().equals(topOfStack) && m.getTerminal().equals(topOfSentence)){
+                    // if(m.getNonTerminal().equals(topOfStack) && m.getTerminal().equals(topOfSentence)){
+                    // Se os valores batem com os topos das pilhas 
+                    if(m.getTerminal().equals(topOfStack) && m.getNonTerminal().equals(topOfSentence)){
+                        // Se achou, para a procura
                         currDer = m.getDerivation();
                     }
                 }
-                if(currDer == null) return false;
+                // Se não achar o elemento na tabela, significa que não aceita a sentenção
+                if(currDer == null){
+                    System.out.println("Não encontrou M coincidente na tabela, logo, a sentença não é válida");
+                    return false;
+                }
 
                 String right = currDer.getRight().get(0);
                 int rightLength = right.length();
                 while (rightLength > 0){
-                    // char lastCharacter = right.charAt(rightLength-1);
                     String lastCharacter = Utils.returnLastChar(right);
-                    stack.push(lastCharacter);
-                    rightLength -= 1;
+                    right = Utils.removeLastChar(right);
+                    if(!lastCharacter.equals("E")){
+                        stack.push(lastCharacter);
+                    }
+                    rightLength = right.length();
                 }
             }
+            
         }
-
+        System.out.println(String.format("%s    |    %s", stack, sentence));
         return true;
     }
 

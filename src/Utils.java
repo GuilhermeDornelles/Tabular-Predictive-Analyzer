@@ -52,6 +52,20 @@ public class Utils {
         return firstChar;
     }
 
+    public static String removeLastChar(String string){
+        if(string.length() <= 1){
+            return "";
+        }
+        String newString = "";
+        String lastChar = String.valueOf(string.charAt(string.length()-1));
+        if(!lastChar.equals("'")){
+            newString = string.substring(0, string.length() -1);
+        } else {
+            newString = string.substring(0, string.length() -2);
+        }
+        return newString;
+    }
+
     public static String returnLastChar(String string) {
         if (string.length() == 0)
             return "";

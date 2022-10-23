@@ -7,14 +7,14 @@ public class Grammar {
     private ArrayList<M> analysisTable;
 
     public ArrayList<M> getAnalysisTable() {
-        return analysisTable;
+        return this.analysisTable;
     }
 
     public Grammar(ArrayList<Derivation> derivations) {
         this.derivations = derivations;
         buildFirst();
         buildFollow();
-        buildAnalysisTable();
+        this.analysisTable = buildAnalysisTable();
     }
 
     public Derivation getFirstDerivation() {
