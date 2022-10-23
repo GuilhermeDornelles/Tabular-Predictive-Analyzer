@@ -32,6 +32,7 @@ public class Utils {
             sc.close();
         } catch (Exception e) {
             System.out.println(e);
+            return null;
         }
         return lines;
     }

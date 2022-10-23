@@ -6,8 +6,6 @@ public class TabularAnalyzer {
 
     public TabularAnalyzer(String filePath) {
         this.grammar = buildGrammar(filePath);
-        System.out.println("Gramática Criada:");
-        System.out.println(this.grammar);
     }
 
     public String printAllFirst() {
@@ -114,6 +112,10 @@ public class TabularAnalyzer {
 
     private static Grammar buildGrammar(String filePath) {
         ArrayList<String> lines = Utils.returnLinesFromFile(filePath);
+
+        if(lines == null){
+            return null;
+        }
 
         ArrayList<Derivation> derivations = new ArrayList<>();
         String[] derivation;
